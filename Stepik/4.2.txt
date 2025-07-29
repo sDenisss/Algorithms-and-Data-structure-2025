@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+
+class TreeNode
+{
+    public int Key { get; set; }
+    public int Left { get; set; }
+    public int Right { get; set; }
+}
+
+class Program
+{
+    static void Main()
+    {
+        int n = int.Parse(Console.ReadLine());
+        if (n == 0)
+        {
+            Console.WriteLine("CORRECT");
+            return;
+        }
+
+        TreeNode[] tree = new TreeNode[n];
+        for (int i = 0; i < n; i++)
+        {
+            string[] parts = Console.ReadLine().Split();
+            tree[i] = new TreeNode
+            {
+                Key = int.Parse(parts[0]),
+                Left = int.Parse(parts[1]),
+                Right = int.Parse(parts[2])
+            };
+        }
+
+        if (IsBST(tree, 0, long.MinValue, long.MaxValue))
+            Console.WriteLine("CORRECT");
+        else
+            Console.WriteLine("INCORRECT");
+    }
+
+    static bool IsBST(TreeNode[] tree, int nodeIndex, long min, long max)
+    {
+        if (nodeIndex == -1)
+            return true;
+
+        TreeNode node = tree[nodeIndex];
+        if (node.Key <= min || node.Key >= max)
+            return false;
+
+        return IsBST(tree, node.Left, min, node.Key) && 
+               IsBST(tree, node.Right, node.Key, max);
+    }
+}

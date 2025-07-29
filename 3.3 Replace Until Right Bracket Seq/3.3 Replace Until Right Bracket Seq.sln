@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3.3 Replace Until Right Bracket Seq", "3.3 Replace Until Right Bracket Seq.csproj", "{45AF9E47-5D64-8047-5CFE-BBAC1941A6D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45AF9E47-5D64-8047-5CFE-BBAC1941A6D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45AF9E47-5D64-8047-5CFE-BBAC1941A6D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45AF9E47-5D64-8047-5CFE-BBAC1941A6D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45AF9E47-5D64-8047-5CFE-BBAC1941A6D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0C1E18A2-F623-4C1B-8155-5D7E34B512A0}
+	EndGlobalSection
+EndGlobal

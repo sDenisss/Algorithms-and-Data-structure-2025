@@ -1,0 +1,171 @@
+using System;
+using System.Text;
+
+class RopeNode
+{
+    public char Value;
+    public int Priority;
+    public int Size;
+    public RopeNode Left;
+    public RopeNode Right;
+
+    public RopeNode(char value)
+    {
+        Value = value;
+        Priority = new Random().Next();
+        Size = 1;
+    }
+}
+
+class Rope
+{
+    private RopeNode root;
+
+    private void UpdateSize(RopeNode node)
+    {
+        if (node != null)
+        {
+            node.Size = 1 + GetSize(node.Left) + GetSize(node.Right);
+        }
+    }
+
+    private int GetSize(RopeNode node)
+    {
+        return node?.Size ?? 0;
+    }
+
+    private (RopeNode, RopeNode) Split(RopeNode node, int key)
+    {
+        if (node == null)
+            return (null, null);
+
+        int currentKey = GetSize(node.Left);
+        if (currentKey < key)
+        {
+            var (left, right) = Split(node.Right, key - currentKey - 1);
+            node.Right = left;
+            UpdateSize(node);
+            return (node, right);
+        }
+        else
+        {
+            var (left, right) = Split(node.Left, key);
+            node.Left = right;
+            UpdateSize(node);
+            return (left, node);
+        }
+    }
+
+    private RopeNode Merge(RopeNode left, RopeNode right)
+    {
+        if (left == null) return right;
+        if (right == null) return left;
+
+        if (left.Priority > right.Priority)
+        {
+            left.Right = Merge(left.Right, right);
+            UpdateSize(left);
+            return left;
+        }
+        else
+        {
+            right.Left = Merge(left, right.Left);
+            UpdateSize(right);
+            return right;
+        }
+    }
+
+    public void Insert(int pos, string s)
+    {
+        var newNode = Build(s);
+        var (left, right) = Split(root, pos);
+        root = Merge(Merge(left, newNode), right);
+    }
+
+    public string Cut(int i, int j)
+    {
+        var (left, temp) = Split(root, i);
+        var (mid, right) = Split(temp, j - i + 1);
+        root = Merge(left, right);
+        return ToString(mid);
+    }
+
+    public void Move(int i, int j, int k)
+    {
+        var (left, temp) = Split(root, i);
+        var (mid, right) = Split(temp, j - i + 1);
+        var remaining = Merge(left, right);
+        
+        if (k == 0)
+        {
+            root = Merge(mid, remaining);
+        }
+        else
+        {
+            var (left2, right2) = Split(remaining, k);
+            root = Merge(Merge(left2, mid), right2);
+        }
+    }
+
+    private RopeNode Build(string s)
+    {
+        RopeNode result = null;
+        foreach (char c in s)
+        {
+            result = Merge(result, new RopeNode(c));
+        }
+        return result;
+    }
+
+    public override string ToString()
+    {
+        return ToString(root);
+    }
+
+    private string ToString(RopeNode node)
+    {
+        if (node == null) return "";
+        var sb = new StringBuilder();
+        var stack = new System.Collections.Generic.Stack<RopeNode>();
+        RopeNode current = node;
+
+        while (current != null || stack.Count > 0)
+        {
+            while (current != null)
+            {
+                stack.Push(current);
+                current = current.Left;
+            }
+
+            current = stack.Pop();
+            sb.Append(current.Value);
+            current = current.Right;
+        }
+
+        return sb.ToString();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        string S = Console.ReadLine();
+        int q = int.Parse(Console.ReadLine());
+
+        var rope = new Rope();
+        rope.Insert(0, S);
+
+        for (int query = 0; query < q; query++)
+        {
+            string[] parts = Console.ReadLine().Split();
+            int i = int.Parse(parts[0]);
+            int j = int.Parse(parts[1]);
+            int k = int.Parse(parts[2]);
+
+            rope.Move(i, j, k);
+        }
+
+        Console.WriteLine(rope.ToString());
+    }
+}

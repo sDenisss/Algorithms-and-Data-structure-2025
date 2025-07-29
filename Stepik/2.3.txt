@@ -1,0 +1,78 @@
+using System;
+using System.Linq;
+
+class UnionFind
+{
+    private int[] parent;
+    private long[] size;
+    private long maxSize;
+
+    public UnionFind(int n, long[] sizes)
+    {
+        parent = new int[n + 1];
+        size = new long[n + 1];
+        
+        for (int i = 1; i <= n; i++)
+        {
+            parent[i] = i;
+            size[i] = sizes[i - 1];
+            if (size[i] > maxSize)
+                maxSize = size[i];
+        }
+    }
+
+    public int Find(int i)
+    {
+        if (parent[i] != i)
+            parent[i] = Find(parent[i]);
+        return parent[i];
+    }
+
+    public void Union(int i, int j)
+    {
+        int rootI = Find(i);
+        int rootJ = Find(j);
+        
+        if (rootI == rootJ)
+            return;
+        
+        if (size[rootI] < size[rootJ])
+        {
+            int temp = rootI;
+            rootI = rootJ;
+            rootJ = temp;
+        }
+        
+        parent[rootJ] = rootI;
+        size[rootI] += size[rootJ];
+        size[rootJ] = 0;
+        
+        if (size[rootI] > maxSize)
+            maxSize = size[rootI];
+    }
+
+    public long GetMaxSize() => maxSize;
+}
+
+class Program
+{
+    static void Main()
+    {
+        string[] firstLine = Console.ReadLine().Split();
+        int n = int.Parse(firstLine[0]);
+        int m = int.Parse(firstLine[1]);
+
+        long[] sizes = Console.ReadLine().Split().Select(long.Parse).ToArray();
+        UnionFind uf = new UnionFind(n, sizes);
+
+        for (int i = 0; i < m; i++)
+        {
+            string[] query = Console.ReadLine().Split();
+            int dest = int.Parse(query[0]);
+            int src = int.Parse(query[1]);
+            
+            uf.Union(dest, src);
+            Console.WriteLine(uf.GetMaxSize());
+        }
+    }
+}

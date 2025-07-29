@@ -1,0 +1,83 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+class RabinKarpAlgorithm
+{
+    private const long p = 1000000007;
+    private const long x = 263;
+
+    public static List<int> FindPattern(string pattern, string text)
+    {
+        List<int> result = new List<int>();
+        int patternLength = pattern.Length;
+        int textLength = text.Length;
+
+        if (patternLength > textLength)
+            return result;
+
+        // Предварительное вычисление x^patternLength mod p
+        long xPow = 1;
+        for (int i = 0; i < patternLength - 1; i++)
+            xPow = (xPow * x) % p;
+
+        // Вычисление хеша образца и первого окна текста
+        long patternHash = 0;
+        long windowHash = 0;
+        for (int i = 0; i < patternLength; i++)
+        {
+            patternHash = (patternHash * x + pattern[i]) % p;
+            windowHash = (windowHash * x + text[i]) % p;
+        }
+
+        for (int i = 0; i <= textLength - patternLength; i++)
+        {
+            // Проверка совпадения хешей
+            if (patternHash == windowHash)
+            {
+                // Проверка посимвольно при совпадении хешей
+                bool match = true;
+                for (int j = 0; j < patternLength; j++)
+                {
+                    if (text[i + j] != pattern[j])
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match)
+                    result.Add(i);
+            }
+
+            // Вычисление хеша для следующего окна
+            if (i < textLength - patternLength)
+            {
+                windowHash = (windowHash - text[i] * xPow % p + p) % p;
+                windowHash = (windowHash * x + text[i + patternLength]) % p;
+            }
+        }
+
+        return result;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        string pattern = Console.ReadLine();
+        string text = Console.ReadLine();
+
+        var result = RabinKarpAlgorithm.FindPattern(pattern, text);
+
+        var output = new StringBuilder();
+        foreach (int index in result)
+        {
+            if (output.Length > 0)
+                output.Append(" ");
+            output.Append(index);
+        }
+
+        Console.WriteLine(output.ToString());
+    }
+}

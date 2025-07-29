@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+
+public class MainClass
+{
+    static void Main(string[] args)
+    {
+        string input = Console.ReadLine();
+        string result = CheckBrackets(input); // Сохраняем результат
+        Console.WriteLine(result); // Выводим результат
+    }
+
+    static string CheckBrackets(string s)
+    {
+        Stack<(char, int)> stack = new Stack<(char, int)>();
+        Dictionary<char, char> bracketPairs = new Dictionary<char, char>
+        {
+            { ')', '(' },
+            { '}', '{' },
+            { ']', '[' }
+        };
+
+        for (int i = 0; i < s.Length; i++)
+        {
+            char currentChar = s[i];
+            if (bracketPairs.ContainsValue(currentChar))
+            {
+                stack.Push((currentChar, i + 1)); // Индексация с 1
+            }
+            else if (bracketPairs.ContainsKey(currentChar))
+            {
+                if (stack.Count == 0 || stack.Peek().Item1 != bracketPairs[currentChar])
+                {
+                    return (i + 1).ToString(); // Индексация с 1
+                }
+                stack.Pop();
+            }
+        }
+
+        if (stack.Count > 0)
+        {
+            return stack.Peek().Item2.ToString();
+        }
+
+        return "Success";
+    }
+}

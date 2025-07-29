@@ -1,0 +1,59 @@
+using System;
+using System.Collections.Generic;
+
+class PhoneBook
+{
+    private Dictionary<string, string> book;
+
+    public PhoneBook()
+    {
+        book = new Dictionary<string, string>();
+    }
+
+    public void Add(string number, string name)
+    {
+        book[number] = name;
+    }
+
+    public void Delete(string number)
+    {
+        if (book.ContainsKey(number))
+        {
+            book.Remove(number);
+        }
+    }
+
+    public string Find(string number)
+    {
+        return book.TryGetValue(number, out string name) ? name : "not found";
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        int n = int.Parse(Console.ReadLine());
+        PhoneBook phoneBook = new PhoneBook();
+
+        for (int i = 0; i < n; i++)
+        {
+            string[] parts = Console.ReadLine().Split(new[] { ' ' }, 2);
+            string command = parts[0];
+            string[] args = parts[1].Split(new[] { ' ' }, 2);
+
+            switch (command)
+            {
+                case "add":
+                    phoneBook.Add(args[0], args[1]);
+                    break;
+                case "del":
+                    phoneBook.Delete(args[0]);
+                    break;
+                case "find":
+                    Console.WriteLine(phoneBook.Find(args[0]));
+                    break;
+            }
+        }
+    }
+}

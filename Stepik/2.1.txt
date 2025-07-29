@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        int n = int.Parse(Console.ReadLine());
+        int[] heap = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+        List<Tuple<int, int>> swaps = new List<Tuple<int, int>>();
+        
+        for (int i = n / 2 - 1; i >= 0; i--)
+        {
+            SiftDown(heap, i, swaps);
+        }
+        
+        Console.WriteLine(swaps.Count);
+        foreach (var swap in swaps)
+        {
+            Console.WriteLine(swap.Item1 + " " + swap.Item2);
+        }
+    }
+    
+    static void SiftDown(int[] heap, int i, List<Tuple<int, int>> swaps)
+    {
+        int n = heap.Length;
+        int minIndex = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+        
+        if (left < n && heap[left] < heap[minIndex])
+        {
+            minIndex = left;
+        }
+        
+        if (right < n && heap[right] < heap[minIndex])
+        {
+            minIndex = right;
+        }
+        
+        if (i != minIndex)
+        {
+            swaps.Add(Tuple.Create(i, minIndex));
+            int temp = heap[i];
+            heap[i] = heap[minIndex];
+            heap[minIndex] = temp;
+            SiftDown(heap, minIndex, swaps);
+        }
+    }
+}

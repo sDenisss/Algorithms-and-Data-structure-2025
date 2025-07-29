@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+
+public class MainClass
+{
+    static void Main(string[] args)
+    {
+        int n = int.Parse(Console.ReadLine());
+        int[] parents = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+
+        // Строим дерево
+        List<int>[] children = new List<int>[n];
+        for (int i = 0; i < n; i++)
+        {
+            children[i] = new List<int>();
+        }
+
+        int root = -1;
+        for (int i = 0; i < n; i++)
+        {
+            if (parents[i] == -1)
+            {
+                root = i;
+            }
+            else
+            {
+                children[parents[i]].Add(i);
+            }
+        }
+
+        // Вычисляем высоту дерева
+        int height = CalculateHeight(root, children);
+        Console.WriteLine(height);
+    }
+
+    static int CalculateHeight(int node, List<int>[] children)
+    {
+        int maxHeight = 0;
+        foreach (int child in children[node])
+        {
+            int childHeight = CalculateHeight(child, children);
+            if (childHeight > maxHeight)
+            {
+                maxHeight = childHeight;
+            }
+        }
+        return maxHeight + 1;
+    }
+}

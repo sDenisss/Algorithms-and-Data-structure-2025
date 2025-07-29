@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+using pii = pair<int,int>;
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int N, M;
+    if(!(cin >> N >> M)) return 0;
+    int K;
+    cin >> K;
+
+    vector<vector<int>> dist(N, vector<int>(M, -1));
+    queue<pii> q;
+
+    // Читаем источники огня
+    for(int i = 0; i < K; i++){
+        int x, y;
+        cin >> x >> y;
+        --x; --y;                // переводим в 0‑индекс
+        dist[x][y] = 0;
+        q.emplace(x,y);
+    }
+
+    // Направления: вверх, вниз, влево, вправо
+    int dx[4] = {-1,1,0,0}, dy[4] = {0,0,-1,1};
+
+    // Многореждный BFS
+    while(!q.empty()){
+        auto [x,y] = q.front(); q.pop();
+        for(int d = 0; d < 4; d++){
+            int nx = x + dx[d], ny = y + dy[d];
+            if(nx>=0 && nx<N && ny>=0 && ny<M && dist[nx][ny] == -1){
+                dist[nx][ny] = dist[x][y] + 1;
+                q.emplace(nx, ny);
+            }
+        }
+    }
+
+    // Находим клетку с максимальным dist
+    int bestX = 0, bestY = 0, bestD = -1;
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < M; j++){
+            if(dist[i][j] > bestD){
+                bestD = dist[i][j];
+                bestX = i; bestY = j;
+            }
+        }
+    }
+
+    // Выводим в 1‑индексе
+    cout << bestX+1 << " " << bestY+1 << "\n";
+    return 0;
+}

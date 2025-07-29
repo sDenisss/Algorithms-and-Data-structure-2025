@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/University/Programming/C++ Shit/mingw64/include"
+                // "C:/mingw-w64/mingw64/x86_64-w64-mingw32/include"
+            ],
+             "intelliSenseMode": "windows-gcc-x64",
+            "compilerPath": "C:/University/Programming/C++ Shit/mingw64/bin/g++.exe",
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ]
+        }
+    ],
+    "version": 4
+}
